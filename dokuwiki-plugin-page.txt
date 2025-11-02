@@ -46,8 +46,7 @@ After installation, visit the **Configuration Manager** in your DokuWiki admin p
 The following options are available in the Configuration Manager:
 
 ^ Setting ^ Description ^
-| **Protected page patterns** | List of PCRE regular expressions. Each line defines a pattern. When a page matches any pattern, non-admin users cannot delete it by empty save. Invalid patterns are automatically skipped with warnings shown to administrators. |
-| **Match against** | Choose whether the patterns should match against the page ID (e.g. ''users:john:home'') or the relative file path (e.g. ''users/john/home.txt''). |
+| **Protected page patterns** | Regular expression patterns to protect pages from deletion. Enter one pattern per line. When a page matches any pattern, only administrators (and optionally configured groups) can delete it via empty save. Invalid patterns are automatically skipped with warnings shown to administrators. |
 | **Extra groups allowed to delete** | Comma separated list of user groups that are allowed to delete protected pages, in addition to administrators. Leave empty to restrict deletion to admins only. |
 | **Treat whitespace-only pages as empty** | If enabled, pages containing only whitespace will be treated as empty and deletion will be blocked on protected pages. |
 
@@ -105,7 +104,7 @@ See [[https://github.com/jonnydee/deletepageguard/blob/master/CHANGELOG.md|CHANG
     * Core deletion prevention functionality
     * Pattern validation with ReDoS protection
     * Admin interface for testing patterns
-    * Comprehensive test suite (32 tests)
+    * Comprehensive test suite
 
 ===== License =====
 
@@ -115,4 +114,4 @@ This plugin is released under the [[https://www.gnu.org/licenses/gpl-2.0.html|GN
 
   * **Bug Reports**: [[https://github.com/jonnydee/deletepageguard/issues|GitHub Issues]]
   * **Source Code**: [[https://github.com/jonnydee/deletepageguard|GitHub Repository]]
-  * **Discussion**: Use the discussion section below
+  * **Discussion**: [[https://github.com/jonnydee/deletepageguard/discussions| GitHub Discussions]]
