@@ -1,0 +1,7 @@
+base   deleteguard
+author ChatGPT Agent
+email  no-email@example.com
+date   2025-11-02
+name   Delete Guard Plugin
+desc   Prevent deletion of pages by empty saves when page IDs or file paths match configured regular expressions. Only admins and optionally exempt groups may delete such pages.
+url    https://example.com/deleteguard
