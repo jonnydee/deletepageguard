@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete Guard Plugin for DokuWiki
+ * Delete Page Guard for DokuWiki
  *
  * This action plugin prevents the deletion of pages by blocking "empty save"
  * operations on pages whose IDs or file paths match a set of user‑defined
@@ -8,7 +8,7 @@
  * exempt groups are allowed to delete pages regardless of these patterns.
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     ChatGPT Agent
+ * @author     Johann Duscher <jonny.dee@posteo.net>
  */
 
 use dokuwiki\Extension\ActionPlugin;
@@ -20,13 +20,13 @@ use dokuwiki\Extension\EventHandler;
 if (!defined('DOKU_INC')) die();
 
 /**
- * Class action_plugin_deleteguard
+ * Class action_plugin_deletepageguard
  *
  * Registers a handler on COMMON_WIKIPAGE_SAVE to intercept page save
  * operations. When a deletion (empty save) is attempted on a protected page
  * by a non‑admin user, the save is prevented and an error message is shown.
  */
-class action_plugin_deleteguard extends ActionPlugin {
+class action_plugin_deletepageguard extends ActionPlugin {
 
     /**
      * Register the plugin events

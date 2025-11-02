@@ -1,6 +1,6 @@
 <?php
 /**
- * English language file for the Delete Guard plugin
+ * English language file for the Delete Page Guard plugin
  */
 
 $lang['deny_msg'] = 'Deleting this page is not allowed.';

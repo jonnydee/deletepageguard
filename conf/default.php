@@ -1,6 +1,6 @@
 <?php
 /**
- * Default configuration for the Delete Guard plugin
+ * Default configuration for the Delete Page Guard plugin
  *
  * Each key defined here will be used as a default when the plugin is
  * installed. Administrators can override these values via the

@@ -1,17 +1,18 @@
 <?php
 /**
- * Configuration metadata for the Delete Guard plugin
+ * Configuration metadata for the Delete Page Guard plugin
  *
  * The Configuration Manager uses this metadata to render appropriate
  * input controls and perform simple validation. For details see the
  * DokuWiki developer documentation.
  */
 
-// patterns: use the default 'string' class to allow free text. You may
-// specify multiple patterns separated by newlines. There is no built‑in
-// textarea class, but the Configuration Manager will provide a multi‑line
-// input for long strings when the `_type` is not specified.
-$meta['patterns'] = array('string');
+// patterns: use the default (empty) class to render a textarea control. This
+// allows multiple regular expressions to be entered on separate lines. Each
+// line should contain one Perl‑compatible regular expression. The
+// Configuration Manager treats an empty setting class as a multiline
+// textarea for free text input.
+$meta['patterns'] = array('');
 
 // match_target: single choice from a list of options. Choices are
 // 'id' (match against page ID) and 'filepath' (match against relative

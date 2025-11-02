@@ -1,6 +1,6 @@
-# Delete Guard Plugin for DokuWiki
+# Delete Page Guard for DokuWiki
 
-The **Delete Guard** plugin prevents accidental or intentional deletion of
+The **Delete Page Guard** plugin prevents accidental or intentional deletion of
 wikipages in your DokuWiki installation by blocking the “empty save”
 operation when certain pages are protected. A page is considered for
 protection when its ID or relative file path matches one or more
@@ -19,11 +19,11 @@ regular expressions configured via the DokuWiki Configuration Manager.
 ## Installation
 
 1. Copy the contents of this plugin directory into
-   `<dokuwiki>/lib/plugins/deleteguard/`.
+   `<dokuwiki>/lib/plugins/deletepageguard/`.
 2. Ensure that the directory name matches the `base` value in
-   `plugin.info.txt` (here: `deleteguard`).
+   `plugin.info.txt` (here: `deletepageguard`).
 3. Visit the **Configuration Manager** in your DokuWiki and adjust the
-   plugin settings under the “Delete Guard” section.
+   plugin settings under the “Delete Page Guard” section.
 
 ## Configuration
 
