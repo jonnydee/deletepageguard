@@ -33,6 +33,17 @@ $lang['no_patterns'] = 'No patterns to validate.';
 $lang['all_patterns_valid'] = 'All %d patterns are valid!';
 $lang['some_patterns_invalid'] = 'Some patterns have issues. Please fix them before using.';
 
+// Pattern matching
+$lang['show_matches_button'] = 'Show Matching Pages';
+$lang['matching_pages_title'] = 'Pages Matching Patterns';
+$lang['no_valid_patterns'] = 'No valid patterns to test. Please fix validation errors first.';
+$lang['no_pages_found'] = 'No pages found in wiki.';
+$lang['no_matching_pages'] = 'No pages match the patterns (scanned %d pages).';
+$lang['found_matching_pages'] = 'Found %d protected pages out of %d total pages.';
+$lang['page_id'] = 'Page ID';
+$lang['match_target'] = 'Match Target';
+$lang['matched_pattern'] = 'Matched Pattern';
+
 // Detailed error messages for admin interface
 $lang['error_pattern_too_long'] = 'Pattern is too long (maximum 1000 characters allowed)';
 $lang['error_pattern_redos'] = 'Pattern may cause performance issues (potential ReDoS attack)';

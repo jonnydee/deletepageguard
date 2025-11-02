@@ -6,7 +6,7 @@ author     : Johann Duscher
 email      : jonny.dee@posteo.net
 type       : action
 lastupdate : 2025-11-02
-compatible : Kaos, Jack Jackrum, Igor, Hogfather, Greebo
+compatible : Librarian
 depends    : 
 conflicts  : 
 similar    : 
@@ -92,9 +92,9 @@ For maintainers and contributors, see the [[https://github.com/jonnydee/deletepa
 
 ===== Compatibility =====
 
-This plugin hooks into the ''COMMON_WIKIPAGE_SAVE'' event, which was introduced in DokuWiki release **"Detritus" (2016-02-24)** and is marked as preventable. It has been tested for compatibility with recent releases including **"Kaos" (2024-02-06b)**.
+This plugin has been tested with **DokuWiki "Librarian" (2025-05-14b)**.
 
-The plugin uses only public APIs and the documented event system, so it should continue to work with future versions as long as these events remain available.
+It hooks into the ''COMMON_WIKIPAGE_SAVE'' event, which was introduced in DokuWiki release **"Detritus" (2016-02-24)** and is marked as preventable. The plugin uses only stable, public APIs and the documented event system that have been available since "Detritus", so it should work with most recent DokuWiki versions. Please report any compatibility issues on GitHub.
 
 ===== Changelog =====
 

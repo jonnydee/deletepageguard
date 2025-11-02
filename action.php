@@ -161,6 +161,27 @@ class action_plugin_deletepageguard extends ActionPlugin {
     }
 
     /**
+     * Get the match target (page ID or file path) for a given page ID
+     * 
+     * This is a public helper method for the admin plugin to convert page IDs
+     * to the appropriate match target based on configuration.
+     *
+     * @param string $pageId The DokuWiki page ID
+     * @return string The match target (either page ID or relative file path)
+     */
+    public function getMatchTarget($pageId) {
+        global $conf;
+        
+        if ($this->getConf('match_target') === 'filepath') {
+            // Convert page ID to file path
+            $filePath = wikiFN($pageId);
+            return $this->getRelativeFilePath($filePath, $conf['datadir']);
+        }
+        
+        return $pageId;
+    }
+
+    /**
      * Validate a regex pattern for security and correctness
      *
      * Performs basic validation to prevent ReDoS attacks and ensure the
@@ -205,16 +226,17 @@ class action_plugin_deletepageguard extends ActionPlugin {
     }
 
     /**
-     * Safely match a pattern against a target string with timeout protection
+     * Check if a pattern matches a target string
      *
      * Applies the regex pattern with error handling and basic timeout protection
-     * to prevent ReDoS attacks.
+     * to prevent ReDoS attacks. This method is public to allow the admin plugin
+     * to test patterns against page lists.
      *
      * @param string $pattern The validated regex pattern
      * @param string $target  The string to match against
      * @return bool True if the pattern matches, false otherwise
      */
-    protected function matchesPattern($pattern, $target) {
+    public function matchesPattern($pattern, $target) {
         // Escape forward slashes in pattern to use with / delimiters
         $escapedPattern = '/' . str_replace('/', '\/', $pattern) . '/u';
         

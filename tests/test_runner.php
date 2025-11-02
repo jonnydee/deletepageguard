@@ -279,5 +279,47 @@ $runner->addTest('Real-world - File Extension Pattern', function() {
            $plugin->matchesPattern($pattern, 'image.png') === false;
 });
 
+// Test: getMatchTarget method
+$runner->addTest('Match Target - Page ID Mode', function() {
+    $plugin = new TestableDeletePageGuard();
+    $plugin->setTestConfig('match_target', 'id');
+    $result = $plugin->getMatchTarget('wiki:syntax');
+    return $result === 'wiki:syntax'; // Should return page ID unchanged
+});
+
+$runner->addTest('Match Target - File Path Mode', function() {
+    $plugin = new TestableDeletePageGuard();
+    $plugin->setTestConfig('match_target', 'filepath');
+    $result = $plugin->getMatchTarget('wiki:syntax');
+    // Should return relative file path
+    return strpos($result, 'wiki/syntax.txt') !== false;
+});
+
+$runner->addTest('Match Target - Nested Page in File Path Mode', function() {
+    $plugin = new TestableDeletePageGuard();
+    $plugin->setTestConfig('match_target', 'filepath');
+    $result = $plugin->getMatchTarget('users:john:start');
+    return strpos($result, 'users/john/start.txt') !== false;
+});
+
+// Test: Public API method exposure
+$runner->addTest('API - validateRegexPattern is public', function() {
+    $plugin = new TestableDeletePageGuard();
+    $reflection = new ReflectionMethod($plugin, 'validateRegexPattern');
+    return $reflection->isPublic();
+});
+
+$runner->addTest('API - matchesPattern is public', function() {
+    $plugin = new TestableDeletePageGuard();
+    $reflection = new ReflectionMethod($plugin, 'matchesPattern');
+    return $reflection->isPublic();
+});
+
+$runner->addTest('API - getMatchTarget is public', function() {
+    $plugin = new TestableDeletePageGuard();
+    $reflection = new ReflectionMethod($plugin, 'getMatchTarget');
+    return $reflection->isPublic();
+});
+
 // Run all tests
 $runner->run();

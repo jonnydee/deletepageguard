@@ -62,6 +62,20 @@ if (!class_exists('dokuwiki\Extension\EventHandler')) {
 // Mock DokuWiki constants and functions
 if (!defined('DOKU_INC')) define('DOKU_INC', dirname(__DIR__) . '/');
 
+// Mock wikiFN function for file path testing
+if (!function_exists('wikiFN')) {
+    function wikiFN($id) {
+        global $conf;
+        $datadir = isset($conf['datadir']) ? $conf['datadir'] : '/var/data';
+        return $datadir . '/pages/' . str_replace(':', '/', $id) . '.txt';
+    }
+}
+
+// Mock global $conf
+$GLOBALS['conf'] = [
+    'datadir' => '/var/data'
+];
+
 // Include the actual plugin file
 require_once dirname(__DIR__) . '/action.php';
 
@@ -73,16 +87,27 @@ require_once dirname(__DIR__) . '/action.php';
 class TestableDeletePageGuard extends action_plugin_deletepageguard {
     
     /**
+     * Mock configuration storage
+     */
+    private $testConfig = [
+        'patterns' => "^start$\n^sidebar$\n^users:[^:]+:start$",
+        'match_target' => 'id',
+        'exempt_groups' => 'editors,moderators',
+        'trim_mode' => true
+    ];
+    
+    /**
      * Override getConf to use mock configuration
      */
     public function getConf($key) {
-        $config = [
-            'patterns' => "^start$\n^sidebar$\n^users:[^:]+:start$",
-            'match_target' => 'id',
-            'exempt_groups' => 'editors,moderators',
-            'trim_mode' => true
-        ];
-        return isset($config[$key]) ? $config[$key] : null;
+        return isset($this->testConfig[$key]) ? $this->testConfig[$key] : null;
+    }
+    
+    /**
+     * Set test configuration (for testing different modes)
+     */
+    public function setTestConfig($key, $value) {
+        $this->testConfig[$key] = $value;
     }
     
     /**
