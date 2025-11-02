@@ -97,14 +97,21 @@ class action_plugin_deletepageguard extends ActionPlugin {
         $patternsSetting = (string)$this->getConf('patterns');
         $patternLines    = preg_split('/\R+/', $patternsSetting, -1, PREG_SPLIT_NO_EMPTY);
 
-        foreach ($patternLines as $rawPattern) {
+        $hasValidationErrors = false;
+        foreach ($patternLines as $lineNumber => $rawPattern) {
             $pattern = trim($rawPattern);
             if ($pattern === '') {
                 continue;
             }
             
             // Validate and secure the regex pattern
-            if (!$this->validateRegexPattern($pattern)) {
+            $validationResult = $this->validateRegexPattern($pattern, $lineNumber + 1);
+            if ($validationResult !== true) {
+                // Show validation error to administrators
+                if (function_exists('auth_isadmin') && auth_isadmin()) {
+                    msg($validationResult, 2); // Warning level
+                }
+                $hasValidationErrors = true;
                 continue;
             }
             
@@ -116,6 +123,11 @@ class action_plugin_deletepageguard extends ActionPlugin {
                 msg($this->getLang('deny_msg'), -1);
                 return;
             }
+        }
+        
+        // If there were validation errors, show a summary message to admins
+        if ($hasValidationErrors && function_exists('auth_isadmin') && auth_isadmin()) {
+            msg($this->getLang('config_validation_errors'), 2);
         }
     }
 
@@ -148,27 +160,32 @@ class action_plugin_deletepageguard extends ActionPlugin {
      * Validate a regular expression pattern for security and correctness
      *
      * Performs basic validation to prevent ReDoS attacks and ensure the
-     * pattern is syntactically correct. Logs warnings for invalid patterns.
+     * pattern is syntactically correct. Returns detailed error messages.
      *
      * @param string $pattern The regex pattern to validate
-     * @return bool True if the pattern is valid and safe, false otherwise
+     * @param int $lineNumber The line number for error reporting
+     * @return string|true True if valid, error message string if invalid
      */
-    protected function validateRegexPattern($pattern) {
+    protected function validateRegexPattern($pattern, $lineNumber = 0) {
+        $linePrefix = $lineNumber > 0 ? "Line $lineNumber: " : "";
+        
         // Check for obviously malicious patterns (basic ReDoS protection)
         if (preg_match('/(\(.*\).*\+.*\(.*\).*\+)|(\(.*\).*\*.*\(.*\).*\*)/', $pattern)) {
-            // Pattern looks like it could cause catastrophic backtracking
-            return false;
+            return $linePrefix . sprintf($this->getLang('pattern_redos_warning'), $pattern);
         }
 
         // Limit pattern length to prevent extremely complex patterns
         if (strlen($pattern) > 1000) {
-            return false;
+            return $linePrefix . sprintf($this->getLang('pattern_too_long'), $pattern);
         }
 
         // Test if the pattern is syntactically valid
-        $test = @preg_match('/' . str_replace('/', '\/', $pattern) . '/u', '');
+        $escapedPattern = '/' . str_replace('/', '\/', $pattern) . '/u';
+        $test = @preg_match($escapedPattern, '');
         if ($test === false) {
-            return false;
+            $error = error_get_last();
+            $errorMsg = $error && isset($error['message']) ? $error['message'] : 'Unknown regex error';
+            return $linePrefix . sprintf($this->getLang('pattern_invalid_syntax'), $pattern, $errorMsg);
         }
 
         return true;

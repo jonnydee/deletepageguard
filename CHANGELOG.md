@@ -17,12 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Whitespace-only content handling (trim mode)
 - Configuration via DokuWiki Configuration Manager
 - English language support
+- **Pattern validation system** with real-time error detection
+- **Admin interface** for testing and validating regex patterns
+- **Comprehensive error messaging** for administrators
 
 ### Security
 - Regex pattern validation to prevent malformed expressions
 - Basic ReDoS (Regular Expression Denial of Service) protection
 - Input sanitization and validation
 - Execution timeout protection for regex matching
+- Pattern complexity limits to prevent performance issues
 
 ### Technical
 - Integration with DokuWiki's `COMMON_WIKIPAGE_SAVE` event

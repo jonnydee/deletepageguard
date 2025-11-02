@@ -8,13 +8,16 @@ regular expressions configured via the DokuWiki Configuration Manager.
 
 ## Features
 
-* Prevents deletion via “empty save” on protected pages.
+* Prevents deletion via "empty save" on protected pages.
 * Supports any number of protection patterns using PCRE syntax.
 * Choose whether to match against the colon‑separated page ID or the
   relative file system path.
 * Allow administrators and optional additional groups to bypass the
   protection.
 * Optionally treat whitespace‑only content as empty.
+* **Pattern validation**: Real-time validation with detailed error messages for administrators.
+* **Admin interface**: Dedicated admin page for testing and validating patterns.
+* **Security features**: Built-in ReDoS protection and input sanitization.
 
 ## Installation
 
@@ -31,10 +34,19 @@ The following options are available in the Configuration Manager:
 
 | Setting | Description |
 |---|---|
-| **Protected page patterns** | List of PCRE regular expressions. Each line defines a pattern. When a page matches any pattern, non‑admin users cannot delete it by empty save. |
+| **Protected page patterns** | List of PCRE regular expressions. Each line defines a pattern. When a page matches any pattern, non‑admin users cannot delete it by empty save. Invalid patterns are automatically skipped with warnings shown to administrators. |
 | **Match against** | Choose whether the patterns should match against the page ID (e.g. `users:john:home`) or the relative file path (e.g. `users/john/home.txt`). |
 | **Extra groups allowed to delete** | Comma separated list of user groups that are allowed to delete protected pages, in addition to administrators. Leave empty to restrict deletion to admins only. |
 | **Treat whitespace‑only pages as empty** | If enabled, pages containing only whitespace will be treated as empty and deletion will be blocked on protected pages. |
+
+### Pattern Validation
+
+The plugin includes comprehensive pattern validation:
+
+* **Real-time validation**: Invalid patterns are automatically detected when pages are saved
+* **Administrator feedback**: Detailed error messages are shown to administrators when invalid patterns are encountered
+* **Admin interface**: Visit **Admin → Delete Page Guard** to test and validate patterns before saving them to configuration
+* **Security protection**: Built-in protection against ReDoS (Regular Expression Denial of Service) attacks
 
 ### Pattern examples
 
