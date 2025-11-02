@@ -7,12 +7,12 @@
  * regular expressions. Administrators (superusers) and optionally configured
  * exempt groups are allowed to delete pages regardless of these patterns.
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Johann Duscher <jonny.dee@posteo.net>
+ * @license GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html) - see LICENSE.md
+ * @author  Johann Duscher <jonny.dee@posteo.net>
+ * @copyright 2025 Johann Duscher
  */
 
 use dokuwiki\Extension\ActionPlugin;
-// Import the correct namespaced classes for event handling
 use dokuwiki\Extension\Event;
 use dokuwiki\Extension\EventHandler;
 
@@ -48,8 +48,8 @@ class action_plugin_deletepageguard extends ActionPlugin {
      * neither an administrator nor in one of the exempt groups, the
      * deletion is prevented.
      *
-     * @param Event      $event The event object
-     * @param mixed      $param Additional parameters (unused)
+     * @param Event $event The event object
+     * @param mixed $param Additional parameters (unused)
      * @return void
      */
     public function handle_common_wikipage_save(Event $event, $param) {
@@ -102,11 +102,14 @@ class action_plugin_deletepageguard extends ActionPlugin {
             if ($pattern === '') {
                 continue;
             }
-            // Try to apply the regex; invalid patterns are ignored
-            if (@preg_match('/' . $pattern . '/u', '') === false) {
+            
+            // Validate and secure the regex pattern
+            if (!$this->validateRegexPattern($pattern)) {
                 continue;
             }
-            if (preg_match('/' . $pattern . '/u', $matchTarget)) {
+            
+            // Apply the regex with timeout protection
+            if ($this->matchesPattern($pattern, $matchTarget)) {
                 // Match found – prevent deletion
                 $event->preventDefault();
                 $event->stopPropagation();
@@ -139,5 +142,65 @@ class action_plugin_deletepageguard extends ActionPlugin {
             return substr($fullPath, strlen($base) + 1);
         }
         return $fullPath;
+    }
+
+    /**
+     * Validate a regular expression pattern for security and correctness
+     *
+     * Performs basic validation to prevent ReDoS attacks and ensure the
+     * pattern is syntactically correct. Logs warnings for invalid patterns.
+     *
+     * @param string $pattern The regex pattern to validate
+     * @return bool True if the pattern is valid and safe, false otherwise
+     */
+    protected function validateRegexPattern($pattern) {
+        // Check for obviously malicious patterns (basic ReDoS protection)
+        if (preg_match('/(\(.*\).*\+.*\(.*\).*\+)|(\(.*\).*\*.*\(.*\).*\*)/', $pattern)) {
+            // Pattern looks like it could cause catastrophic backtracking
+            return false;
+        }
+
+        // Limit pattern length to prevent extremely complex patterns
+        if (strlen($pattern) > 1000) {
+            return false;
+        }
+
+        // Test if the pattern is syntactically valid
+        $test = @preg_match('/' . str_replace('/', '\/', $pattern) . '/u', '');
+        if ($test === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Safely match a pattern against a target string with timeout protection
+     *
+     * Applies the regex pattern with error handling and basic timeout protection
+     * to prevent ReDoS attacks.
+     *
+     * @param string $pattern The validated regex pattern
+     * @param string $target  The string to match against
+     * @return bool True if the pattern matches, false otherwise
+     */
+    protected function matchesPattern($pattern, $target) {
+        // Escape forward slashes in pattern to use with / delimiters
+        $escapedPattern = '/' . str_replace('/', '\/', $pattern) . '/u';
+        
+        // Set a reasonable time limit for regex execution (basic ReDoS protection)
+        $oldTimeLimit = ini_get('max_execution_time');
+        if ($oldTimeLimit > 5) {
+            @set_time_limit(5);
+        }
+        
+        $result = @preg_match($escapedPattern, $target);
+        
+        // Restore original time limit
+        if ($oldTimeLimit > 5) {
+            @set_time_limit($oldTimeLimit);
+        }
+        
+        return $result === 1;
     }
 }

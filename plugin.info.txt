@@ -1,10 +1,8 @@
-base   deletepageguard
-author Johann Duscher
-email  jonny.dee@posteo.net
-# Version of this plugin. DokuWiki primarily uses the date field for update checks
-# but this explicit version may be useful for documentation.
-version 1.0
-date   2025-11-02
-name   Delete Page Guard
-desc   Prevent deletion of pages by empty saves when page IDs or file paths match configured regular expressions. Only administrators and optionally exempt groups may delete such pages.
-url    https://example.com/deletepageguard
+base    deletepageguard
+author  Johann Duscher
+email   jonny.dee@posteo.net
+version 1.0.0
+date    2025-01-02
+name    Delete Page Guard
+desc    Prevent deletion of pages by empty saves when page IDs or file paths match configured regular expressions. Only administrators and optionally exempt groups may delete such pages.
+url     https://github.com/jonnydee/deletepageguard

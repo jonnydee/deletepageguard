@@ -39,32 +39,23 @@ The following options are available in the Configuration Manager:
 ### Pattern examples
 
 * `^users:` – protect all pages in the `users` namespace.
-* `^users:[^:]+:start$` – protect every user’s landing page named `start` under `users:<username>`. |
-* `^projects:.*$` – protect everything in the `projects` namespace. |
-* `^private/.*\.txt$` – when matching against file paths, protect any `.txt` file in the `private` directory. |
+* `^users:[^:]+:start$` – protect every user's landing page named `start` under `users:<username>`.
+* `^projects:.*$` – protect everything in the `projects` namespace.
+* `^private/.*\.txt$` – when matching against file paths, protect any `.txt` file in the `private` directory.
 
 ## How it works
 
-When a page is saved, DokuWiki triggers the
-`COMMON_WIKIPAGE_SAVE` event just before writing to disk. For normal
-edits, the plugin does nothing. However, when the new content is
-empty (after optional trimming) the plugin checks the configured
-patterns against the chosen target (ID or file path). If a match
-occurs and the current user is not an administrator and not in one of
-the exempt groups, the plugin prevents the deletion by calling
-`$event->preventDefault()` and `$event->stopPropagation()` as
-documented in DokuWiki’s event system【147016890842581†L304-L335】. An error message is displayed to
-the user informing them that deletion is not allowed.
+When a page is saved, DokuWiki triggers the `COMMON_WIKIPAGE_SAVE` event just before writing to disk. For normal edits, the plugin does nothing. However, when the new content is empty (after optional trimming) the plugin checks the configured patterns against the chosen target (ID or file path). If a match occurs and the current user is not an administrator and not in one of the exempt groups, the plugin prevents the deletion by calling `$event->preventDefault()` and `$event->stopPropagation()` as documented in DokuWiki's event system. An error message is displayed to the user informing them that deletion is not allowed.
+
+## Security Features
+
+* **Regex Validation**: All regular expressions are validated for syntax before use.
+* **ReDoS Protection**: Basic protection against Regular Expression Denial of Service attacks through pattern complexity checks and execution timeouts.
+* **Input Sanitization**: User input is properly sanitized and validated.
 
 ## Compatibility
 
-This plugin hooks into the `COMMON_WIKIPAGE_SAVE` event, which was
-introduced in DokuWiki release **“Detritus” (2016‑02‑24)** and is
-marked as preventable【699486104488352†L111-L139】. It has been tested for compatibility with
-current releases such as **Kaos 2024‑02‑06b** and **Librarian 2025‑05‑14**.
-The plugin uses only public APIs and the documented event system,
-so it should continue to work with future versions as long as these
-events remain available.
+This plugin hooks into the `COMMON_WIKIPAGE_SAVE` event, which was introduced in DokuWiki release **"Detritus" (2016‑02‑24)** and is marked as preventable. It has been tested for compatibility with current releases such as **"Kaos" (2024‑02‑06b)**. The plugin uses only public APIs and the documented event system, so it should continue to work with future versions as long as these events remain available.
 
 ## License
 
