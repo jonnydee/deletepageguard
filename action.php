@@ -143,6 +143,10 @@ class action_plugin_deletepageguard extends ActionPlugin {
      * @return string Relative file path
      */
     protected function getRelativeFilePath($fullPath, $dataDir) {
+        // Normalize path separators to forward slashes for consistency
+        $fullPath = str_replace('\\', '/', $fullPath);
+        $dataDir = str_replace('\\', '/', $dataDir);
+        
         $base = rtrim($dataDir, '/');
         // DokuWiki stores pages in $datadir/pages
         $pagesDir = $base . '/pages/';
@@ -169,8 +173,14 @@ class action_plugin_deletepageguard extends ActionPlugin {
     protected function validateRegexPattern($pattern, $lineNumber = 0) {
         $linePrefix = $lineNumber > 0 ? "Line $lineNumber: " : "";
         
+        // Empty patterns are not valid
+        if (trim($pattern) === '') {
+            return $linePrefix . 'Empty pattern is not allowed';
+        }
+        
         // Check for obviously malicious patterns (basic ReDoS protection)
-        if (preg_match('/(\(.*\).*\+.*\(.*\).*\+)|(\(.*\).*\*.*\(.*\).*\*)/', $pattern)) {
+        // Detect patterns like (a+)+, (x+)*, (a+)+b, etc.
+        if (preg_match('/\([^)]*[\+\*][^)]*\)[\+\*]/', $pattern)) {
             return $linePrefix . sprintf($this->getLang('pattern_redos_warning'), $pattern);
         }
 
