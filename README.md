@@ -65,6 +65,36 @@ When a page is saved, DokuWiki triggers the `COMMON_WIKIPAGE_SAVE` event just be
 * **ReDoS Protection**: Basic protection against Regular Expression Denial of Service attacks through pattern complexity checks and execution timeouts.
 * **Input Sanitization**: User input is properly sanitized and validated.
 
+## Development
+
+### Developer Testing
+
+The plugin includes a comprehensive test suite for developers:
+
+```bash
+# Run all tests
+php tests/test_runner.php
+
+# Check syntax of all files (if make is available)
+make check
+
+# See all available commands (if make is available)
+make help
+```
+
+The test suite covers pattern validation, matching logic, security features, and edge cases without requiring a DokuWiki installation.
+
+### Test Coverage
+
+- ✅ **32 comprehensive tests** covering all core functionality
+- ✅ **Pattern validation** (syntax, ReDoS protection, length limits)
+- ✅ **Pattern matching** (simple and complex regex patterns)  
+- ✅ **File path conversion** (absolute to relative paths)
+- ✅ **Configuration parsing** (multi-line patterns, different line endings)
+- ✅ **Security features** (escaping, unicode support, injection protection)
+- ✅ **Edge cases** (empty patterns, very long inputs)
+- ✅ **Real-world scenarios** (user pages, namespaces, file extensions)
+
 ## Compatibility
 
 This plugin hooks into the `COMMON_WIKIPAGE_SAVE` event, which was introduced in DokuWiki release **"Detritus" (2016‑02‑24)** and is marked as preventable. It has been tested for compatibility with current releases such as **"Kaos" (2024‑02‑06b)**. The plugin uses only public APIs and the documented event system, so it should continue to work with future versions as long as these events remain available.

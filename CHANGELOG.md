@@ -34,5 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPL v2 licensing with proper headers
 - Standard DokuWiki plugin structure
 - Comprehensive documentation and examples
+- **Developer test suite** with 32 comprehensive tests
+- **Enhanced ReDoS detection** for better security
+- **Cross-platform file path handling** (Windows/Unix)
 
 [1.0.0]: https://github.com/jonnydee/deletepageguard/releases/tag/v1.0.0
