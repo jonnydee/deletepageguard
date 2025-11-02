@@ -101,6 +101,18 @@ $runner->addTest('Pattern Validation - Another ReDoS Pattern', function() {
     return is_string($result) && strpos($result, 'performance issues') !== false;
 });
 
+$runner->addTest('Pattern Validation - ReDoS Simple Plus Pattern', function() {
+    $plugin = new TestableDeletePageGuard();
+    $result = $plugin->validateRegexPattern('(a+)+');
+    return is_string($result) && strpos($result, 'performance issues') !== false;
+});
+
+$runner->addTest('Pattern Validation - ReDoS Simple Star Pattern', function() {
+    $plugin = new TestableDeletePageGuard();
+    $result = $plugin->validateRegexPattern('(x*)*');
+    return is_string($result) && strpos($result, 'performance issues') !== false;
+});
+
 $runner->addTest('Pattern Validation - Length Limit', function() {
     $plugin = new TestableDeletePageGuard();
     $longPattern = str_repeat('a', 1001);

@@ -84,16 +84,25 @@ make help
 
 The test suite covers pattern validation, matching logic, security features, and edge cases without requiring a DokuWiki installation.
 
+### Release Process
+
+For maintainers and contributors, see **[RELEASE.md](RELEASE.md)** for the complete release workflow including:
+- Version management and semantic versioning
+- Automated testing and validation
+- Distribution packaging
+- Git workflow and tagging
+- Quality assurance processes
+
 ### Test Coverage
 
-- ✅ **32 comprehensive tests** covering all core functionality
-- ✅ **Pattern validation** (syntax, ReDoS protection, length limits)
-- ✅ **Pattern matching** (simple and complex regex patterns)  
-- ✅ **File path conversion** (absolute to relative paths)
-- ✅ **Configuration parsing** (multi-line patterns, different line endings)
-- ✅ **Security features** (escaping, unicode support, injection protection)
-- ✅ **Edge cases** (empty patterns, very long inputs)
-- ✅ **Real-world scenarios** (user pages, namespaces, file extensions)
+- **Comprehensive tests** covering all core functionality
+- **Pattern validation** (syntax, ReDoS protection, length limits)
+- **Pattern matching** (simple and complex regex patterns)  
+- **File path conversion** (absolute to relative paths)
+- **Configuration parsing** (multi-line patterns, different line endings)
+- **Security features** (escaping, unicode support, injection protection)
+- **Edge cases** (empty patterns, very long inputs)
+- **Real-world scenarios** (user pages, namespaces, file extensions)
 
 ## Compatibility
 

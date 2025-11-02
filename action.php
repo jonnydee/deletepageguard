@@ -161,16 +161,17 @@ class action_plugin_deletepageguard extends ActionPlugin {
     }
 
     /**
-     * Validate a regular expression pattern for security and correctness
+     * Validate a regex pattern for security and correctness
      *
      * Performs basic validation to prevent ReDoS attacks and ensure the
      * pattern is syntactically correct. Returns detailed error messages.
+     * This method is public to allow the admin plugin to reuse validation logic.
      *
      * @param string $pattern The regex pattern to validate
      * @param int $lineNumber The line number for error reporting
      * @return string|true True if valid, error message string if invalid
      */
-    protected function validateRegexPattern($pattern, $lineNumber = 0) {
+    public function validateRegexPattern($pattern, $lineNumber = 0) {
         $linePrefix = $lineNumber > 0 ? "Line $lineNumber: " : "";
         
         // Empty patterns are not valid
@@ -180,7 +181,9 @@ class action_plugin_deletepageguard extends ActionPlugin {
         
         // Check for obviously malicious patterns (basic ReDoS protection)
         // Detect patterns like (a+)+, (x+)*, (a+)+b, etc.
-        if (preg_match('/\([^)]*[\+\*][^)]*\)[\+\*]/', $pattern)) {
+        // Look for nested quantifiers: (anything with + or *) followed by + or *
+        if (preg_match('/\([^)]*[\+\*][^)]*\)[\+\*]/', $pattern) ||
+            preg_match('/\(.+[\+\*]\)[\+\*]/', $pattern)) {
             return $linePrefix . sprintf($this->getLang('pattern_redos_warning'), $pattern);
         }
 

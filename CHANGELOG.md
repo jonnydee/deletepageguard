@@ -5,9 +5,10 @@ All notable changes to the Delete Page Guard plugin will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-01-02
+## [1.0.0] - 2025-11-02
 
 ### Added
+
 - Initial release of Delete Page Guard plugin
 - Protection of pages from deletion via empty save operations
 - PCRE regular expression pattern matching
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Comprehensive error messaging** for administrators
 
 ### Security
+
 - Regex pattern validation to prevent malformed expressions
 - Basic ReDoS (Regular Expression Denial of Service) protection
 - Input sanitization and validation
@@ -29,12 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pattern complexity limits to prevent performance issues
 
 ### Technical
+
 - Integration with DokuWiki's `COMMON_WIKIPAGE_SAVE` event
 - Proper event handling with `preventDefault()` and `stopPropagation()`
 - GPL v2 licensing with proper headers
 - Standard DokuWiki plugin structure
 - Comprehensive documentation and examples
-- **Developer test suite** with 32 comprehensive tests
+- **Developer test suite** with comprehensive tests
 - **Enhanced ReDoS detection** for better security
 - **Cross-platform file path handling** (Windows/Unix)
 

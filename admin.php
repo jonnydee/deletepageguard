@@ -29,6 +29,14 @@ class admin_plugin_deletepageguard extends AdminPlugin {
     }
 
     /**
+     * Return the text to display in the admin menu
+     * @return string
+     */
+    public function getMenuText($language) {
+        return $this->getLang('menu');
+    }
+
+    /**
      * Return true if access to this admin plugin is allowed
      * @return bool
      */
@@ -41,9 +49,7 @@ class admin_plugin_deletepageguard extends AdminPlugin {
      * @return void
      */
     public function handle() {
-        if (isset($_POST['validate_patterns'])) {
-            $this->validatePatternsFromPost();
-        }
+        // Nothing to handle - validation is done in html() method
     }
 
     /**
@@ -54,9 +60,17 @@ class admin_plugin_deletepageguard extends AdminPlugin {
         echo '<h1>' . $this->getLang('admin_title') . '</h1>';
         echo '<div class="level1">';
         
-        // Show current patterns and validation results
-        $patterns = $this->getConf('patterns');
-        $this->showPatternValidation($patterns);
+        // Determine which patterns to show - use POST data if available, otherwise config
+        $patterns = $_POST['test_patterns'] ?? $this->getConf('patterns');
+        
+        // Show validation results if form was submitted
+        if (isset($_POST['validate_patterns'])) {
+            echo '<h2>' . $this->getLang('validation_results_title') . '</h2>';
+            $this->showPatternValidation($patterns);
+        } else {
+            // Show current config patterns on initial load
+            $this->showPatternValidation($patterns);
+        }
         
         // Add validation form
         echo '<h2>' . $this->getLang('test_patterns_title') . '</h2>';
@@ -67,16 +81,6 @@ class admin_plugin_deletepageguard extends AdminPlugin {
         echo '</form>';
         
         echo '</div>';
-    }
-
-    /**
-     * Validate patterns from POST data
-     * @return void
-     */
-    private function validatePatternsFromPost() {
-        $patterns = $_POST['test_patterns'] ?? '';
-        echo '<h2>' . $this->getLang('validation_results_title') . '</h2>';
-        $this->showPatternValidation($patterns);
     }
 
     /**
@@ -129,28 +133,28 @@ class admin_plugin_deletepageguard extends AdminPlugin {
     }
 
     /**
-     * Validate a single pattern and return detailed error message
+     * Validate a single pattern by delegating to the action plugin's validator.
+     * This ensures consistent validation logic between admin UI and runtime checks.
+     * 
      * @param string $pattern The pattern to validate
      * @return string|true True if valid, error message if invalid
      */
     private function validateSinglePattern($pattern) {
-        // Same validation logic as in action.php but with more detailed messages
-        if (strlen($pattern) > 1000) {
-            return $this->getLang('error_pattern_too_long');
+        // Load the action plugin to use its centralized validation logic
+        $actionPlugin = plugin_load('action', 'deletepageguard');
+        if (!$actionPlugin) {
+            return 'Error: Could not load validation service';
         }
         
-        if (preg_match('/(\(.*\).*\+.*\(.*\).*\+)|(\(.*\).*\*.*\(.*\).*\*)/', $pattern)) {
-            return $this->getLang('error_pattern_redos');
+        // Use the action plugin's validateRegexPattern method (without line number)
+        $result = $actionPlugin->validateRegexPattern($pattern, 0);
+        
+        // The action plugin returns true for valid, string for invalid
+        // We need to strip the "Line 0: " prefix if present
+        if (is_string($result)) {
+            $result = preg_replace('/^Line 0: /', '', $result);
         }
         
-        $escapedPattern = '/' . str_replace('/', '\/', $pattern) . '/u';
-        $test = @preg_match($escapedPattern, '');
-        if ($test === false) {
-            $error = error_get_last();
-            $errorMsg = $error && isset($error['message']) ? $error['message'] : 'Unknown error';
-            return $this->getLang('error_pattern_syntax') . ': ' . $errorMsg;
-        }
-        
-        return true;
+        return $result;
     }
 }
